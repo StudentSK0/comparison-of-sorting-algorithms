@@ -1,0 +1,15 @@
+build/
+*.o
+*.out
+string_sort_analysis
+results/*.csv
+.vscode/
+.idea/
+
+# CMake generated files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+compile_commands.json
+
+.venv/

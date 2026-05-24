@@ -1,0 +1,241 @@
+\documentclass[a4paper,12pt]{extarticle}
+
+% ============================================================
+%                    ЯЗЫК И ШРИФТЫ
+% ============================================================
+
+% Компиляция: XeLaTeX
+\usepackage{fontspec}
+\usepackage{polyglossia}
+
+\setdefaultlanguage{russian}
+
+\setmainfont{Times New Roman}[Script=Cyrillic,Ligatures=TeX]
+\newfontfamily\cyrillicfont{Times New Roman}[Script=Cyrillic,Ligatures=TeX]
+\newfontfamily\calibrifont{Liberation Sans}
+\newfontfamily\cyrillicfonttt{Courier New}
+
+
+
+% ============================================================
+%                    МАТЕМАТИКА
+% ============================================================
+
+\usepackage{amsmath,amssymb}
+
+
+% ============================================================
+%                    ЦВЕТА И ГРАФИКА
+% ============================================================
+
+\usepackage[table]{xcolor}
+\usepackage{graphicx}
+\usepackage{pgfplots}
+\usepackage{float}
+\usepackage{multicol}
+
+
+% ============================================================
+%                    ТАБЛИЦЫ
+% ============================================================
+
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{makecell}
+\usepackage{tabularray}
+\usepackage{ragged2e}
+\usepackage{longtable}
+
+% ============================================================
+%                    СПИСКИ
+% ============================================================
+
+\usepackage{enumitem}
+
+
+% ============================================================
+%                    URL И ССЫЛКИ
+% ============================================================
+
+\usepackage{xurl}
+
+
+
+% ============================================================
+%                    ГИПЕРССЫЛКИ
+% ============================================================
+
+\usepackage{xurl}
+\usepackage{microtype}
+
+\usepackage[
+    left=30mm,
+    right=15mm,
+    top=20mm,
+    bottom=20mm
+]{geometry}
+
+
+
+\begin{document}
+
+\begin{titlepage}
+    \centering
+
+
+    {\LARGE\bfseries Задача A1\par}
+    \vspace{0.4cm}
+    {\Large\bfseries Анализ строковых сортировок\par}
+
+
+    \vspace{0.5cm}
+
+    \begin{center}
+    \begin{tabular}{|c|c|}
+        \hline
+        \textbf{Задача} & \textbf{ID посылки} \\
+        \hline
+        A1m & \texttt{375963079} \\
+        \hline
+        A1q & \texttt{375963355} \\
+        \hline
+        A1r & \texttt{375966130} \\
+        \hline
+        A1rq & \texttt{375969103} \\
+        \hline
+    \end{tabular}
+    \end{center}
+
+    \vspace{16cm}
+
+    \begin{flushright}
+        \large
+        \textbf{Выполнил:} Коробов Вячеслав\\
+        \textbf{Группа:} 246
+    \end{flushright}
+
+
+
+\end{titlepage}
+
+\section{Эмпирический анализ стандартных алгоритмов}
+
+Для стандартных алгоритмов \texttt{QUICKSORT} и \texttt{MERGESORT} были измерены две характеристики: среднее время выполнения и количество посимвольных сравнений. Тестирование проводилось на трех наборах данных: \textit{случайных, обратных} и \textit{почти отсортированных} строках. Для каждого набора использовались подмассивы размеров от $100$ до $3000$ строк с шагом $100$.
+
+\subsubsection{Время выполнения}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{/home/slava/comparison-of-sorting-algorithms/results/plots/standard_time_required_datasets.png}
+    \caption{Время выполнения стандартных алгоритмов сортировки на трех наборах данных}
+    \label{fig:standard_time_required_datasets}
+\end{figure}
+
+По времени выполнения \texttt{QUICKSORT} оказался быстрее \texttt{MERGESORT} на всех трех типах данных. Это связано с тем, что \texttt{QUICKSORT} сортирует массив преимущественно на месте, тогда как \texttt{MERGESORT} использует дополнительный буфер и выполняет больше операций перемещения элементов при слиянии.
+
+На обратно отсортированных и почти отсортированных данных резкого ухудшения алгоритма \texttt{QUICKSORT} не наблюдается, поскольку в реализации опорный элемент выбирался из середины текущего фрагмента массива. Такой способ выбора опорного элемента снижает риск перехода к худшему случаю на упорядоченных данных.
+
+\subsubsection{Количество посимвольных сравнений}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{/home/slava/comparison-of-sorting-algorithms/results/plots/standard_char_comparisons_required_datasets.png}
+    \caption{Количество посимвольных сравнений стандартных алгоритмов сортировки на трех наборах данных}
+    \label{fig:standard_char_required_datasets}
+\end{figure}
+
+По количеству посимвольных сравнений результат отличается от результата по времени: \texttt{QUICKSORT} выполняет заметно больше посимвольных сравнений, чем \texttt{MERGESORT}. Это объясняется тем, что в процессе разбиения массива элементы многократно сравниваются с опорными значениями. \texttt{MERGESORT} выполняет сравнения более регулярно при слиянии уже отсортированных частей, поэтому число посимвольных сравнений оказывается ниже.
+
+Таким образом, меньшее число посимвольных сравнений не всегда означает меньшее время выполнения. Для \texttt{MERGESORT} существенную роль играют накладные расходы на дополнительную память и копирование строк при слиянии, поэтому по времени он уступает \texttt{QUICKSORT}, несмотря на меньшее количество посимвольных сравнений.
+
+\subsubsection{Дополнительный набор строк с общим префиксом}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{/home/slava/comparison-of-sorting-algorithms/results/plots/standard_char_comparisons_common_prefix.png}
+    \caption{Количество посимвольных сравнений стандартных алгоритмов на строках с длинным общим префиксом}
+    \label{fig:standard_char_common_prefix}
+\end{figure}
+
+Дополнительный набор строк с общим префиксом показывает ключевую особенность строковой сортировки. Оба стандартных алгоритма многократно заново сравнивают совпадающие начальные части строк. Поэтому при наличии длинного общего префикса количество посимвольных сравнений существенно возрастает.
+
+Этот результат показывает, что для строк стандартная оценка сложности сортировки на основе сравнений недостаточна сама по себе. Необходимо учитывать не только количество сравнений элементов массива, но и стоимость каждого сравнения строк, зависящую от длины общего префикса.
+
+
+
+\newpage
+\section{Эмпирический анализ адаптированных алгоритмов}
+
+Рассмотрены четыре специализированных алгоритма строковой сортировки: тернарный \texttt{STRING QUICKSORT}, алгоритм \texttt{LCP MERGESORT}, сортировка \texttt{MSD RADIX SORT} и ее версия с переключением на \texttt{STRING QUICKSORT} при размере фрагмента меньше мощности алфавита. Для сопоставимости также были включены стандартные \texttt{QUICKSORT} и \texttt{MERGESORT}. В стандартном \texttt{QUICKSORT} и тернарном \texttt{STRING QUICKSORT} использовался одинаковый способ выбора опорного элемента: элемент из середины текущего фрагмента массива.
+
+Для \texttt{MSD RADIX SORT} значение счётчика посимвольных операций -- это не количество попарных сравнений строк, а количество обращений к символам при распределении строк по корзинам.
+
+\subsection{Сравнение времени выполнения}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{/home/slava/comparison-of-sorting-algorithms/results/plots/all_algorithms_time_required_datasets.png}
+    \caption{Время выполнения стандартных и адаптированных алгоритмов}
+    \label{fig:all_time_required}
+\end{figure}
+
+По времени выполнения лучшим алгоритмом оказался тернарный \texttt{STRING QUICKSORT}. Он стабильно быстрее стандартного \texttt{QUICKSORT}, поскольку не выполняет полное лексикографическое сравнение строк при каждом разбиении, а работает с символом на текущей глубине.
+
+Несмотря на уменьшение повторных сравнений префиксов, \texttt{LCP MERGESORT} имеет дополнительные накладные расходы на хранение и обновление LCP-информации при слиянии. Поэтому на строках без специально выраженных длинных общих префиксов эти расходы оказываются существенными.
+
+\texttt{MSD RADIX SORT} тоже не всегда выигрывает по времени. Это происходит из-за высокой стоимости распределения по корзинам и рекурсивной обработки большого числа фрагментов. Вариант с переключением на \texttt{STRING QUICKSORT} работает быстрее чистого \texttt{MSD RADIX SORT}, так как уменьшает накладные расходы на малых подмассивах.
+
+\subsection{Сравнение количества посимвольных сравнений}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{/home/slava/comparison-of-sorting-algorithms/results/plots/all_algorithms_char_comparisons_required_datasets.png}
+    \caption{Количество посимвольных сравнений и операций}
+    \label{fig:all_char_required}
+\end{figure}
+
+По количеству посимвольных сравнений адаптированные алгоритмы значительно превосходят стандартные. Особенно заметно отличие от стандартного \texttt{QUICKSORT}, который многократно сравнивает строки с опорными элементами и повторно просматривает одинаковые начальные части строк.
+
+Минимальное число посимвольных операций показывают варианты \texttt{MSD RADIX SORT}. Это соответствует идее алгоритма: строки не сравниваются попарно, а распределяются по символам начиная со старшей позиции. \texttt{LCP MERGESORT} также уменьшает число повторных сравнений по сравнению со стандартным \texttt{MERGESORT}, так как использует уже известную длину общего префикса при слиянии.
+
+\subsection{Дополнительный набор строк с общим префиксом}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{/home/slava/comparison-of-sorting-algorithms/results/plots/all_algorithms_time_common_prefix.png}
+    \caption{Время выполнения всех алгоритмов на строках с длинным общим префиксом}
+    \label{fig:all_time_common_prefix}
+\end{figure}
+
+На строках с длинным общим префиксом преимущество тернарного \texttt{STRING QUICKSORT} становится наиболее заметным. Алгоритм эффективно обрабатывает группы строк с одинаковыми символами на текущей позиции и переходит к следующей позиции только внутри равной группы.
+
+При этом \texttt{MSD RADIX SORT} и его вариант с переключением выполняются медленнее, несмотря на малое число посимвольных операций. Это показывает, что практическое время определяется не только числом обращений к символам, но и накладными расходами на создание и обработку корзин.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{/home/slava/comparison-of-sorting-algorithms/results/plots/all_algorithms_char_comparisons_common_prefix.png}
+    \caption{Количество посимвольных сравнений и операций на строках с длинным общим префиксом}
+    \label{fig:all_char_common_prefix}
+\end{figure}
+
+На наборе с общим префиксом стандартные алгоритмы выполняют существенно больше посимвольных сравнений, так как при каждом сравнении заново просматривают совпадающую начальную часть строк. Адаптированные алгоритмы уменьшают этот эффект: \texttt{STRING QUICKSORT} группирует строки по текущему символу, \texttt{LCP MERGESORT} использует информацию о длине общего префикса, а \texttt{MSD RADIX SORT} распределяет строки по символам без попарного сравнения.
+
+\subsection{Итоговое сравнение с базовым алгоритмом}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{/home/slava/comparison-of-sorting-algorithms/results/plots/speedup_time_vs_standard_quicksort_max_size.png}
+    \caption{Ускорение алгоритмов относительно стандартного \texttt{QUICKSORT} при $n = 3000$}
+    \label{fig:speedup_quicksort}
+\end{figure}
+
+Итоговое сравнение при $n = 3000$ показывает, что наибольшее ускорение относительно стандартного \texttt{QUICKSORT} даёт тернарный \texttt{STRING QUICKSORT}. На трех наборах данных он работает в несколько раз быстрее базового алгоритма, а на строках с общим префиксом его преимущество становится максимальным.
+
+Вариант \texttt{MSD RADIX SORT} с переключением на \texttt{STRING QUICKSORT} быстрее базового \texttt{QUICKSORT} на трех наборах данных, но проигрывает на строках с общим префиксом из-за накладных расходов. Чистый \texttt{MSD RADIX SORT} показывает малое число посимвольных операций, но по времени уступает из-за высокой стоимости корзин. \texttt{LCP MERGESORT} уменьшает число сравнений, однако по времени не является лучшим из-за дополнительных операций с LCP-значениями.
+
+
+
+
+\end{document}
