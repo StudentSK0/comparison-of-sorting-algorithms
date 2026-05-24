@@ -49,4 +49,3 @@ make plots
 
 Команда  создаёт локальный Python-интерпретатор в `.venv/` (если его ещё нет). Затем устанавливает зависимости 
 из `requirements.txt` и запускает `scripts/plot_results.py`.
-# comparison-of-sorting-algorithms
