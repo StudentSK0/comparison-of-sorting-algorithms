@@ -2,7 +2,6 @@ build/
 *.o
 *.out
 string_sort_analysis
-results/*.csv
 .vscode/
 .idea/
 
